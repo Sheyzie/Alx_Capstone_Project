@@ -43,13 +43,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest-framework',
-    'django.contrib.sites',  # Required
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    # Add providers as needed
-    'allauth.socialaccount.providers.google',
+    'rest_framework',
+    # 'django.contrib.sites',  # Required
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # # Add providers as needed
+    # 'allauth.socialaccount.providers.google',
+
+    # --- APPS ---
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware', 
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -100,6 +104,8 @@ DATABASES = {
     }
 }
 
+# Using Custom User
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

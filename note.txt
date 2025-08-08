@@ -1,0 +1,47 @@
+Apps To Create
+
+OnboardingApp:
+    Models:
+        - User
+        - UserProfile
+    Views:
+        - StudentSignUpView
+        - InstructorSignUpView
+        - AdminSignUpView
+        - LoginView
+
+EnrollmentApp:
+    Models:
+        - Enrollment
+
+    Views:
+        - CourseListView
+        - CourseDetailView
+        - LessonListView
+        - LessonDetailView
+
+DashboardApp:
+    views:
+        - CourseListView
+        - CourseDetailView
+        - LessonListView
+        - LessonDetailView
+        - StudentCreateReportView
+    instructor_view:
+        - LessonEditView
+        - StudentListView
+        - StudentDetailView
+        - InstructorCreateReportView
+    admin_view:
+        - InstructorListView
+        - InstructorDetailView
+        - InstructorDeleteView
+        - StudentDeleteView
+        - AllReportView
+
+
+CREATE DATABASE learning_mgt_sys;
+CREATE USER 'super_admin_user'@'localhost' IDENTIFIED BY 'SuperAdminUser1';
+GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD ON learning_mgt_sys.* TO 'super_admin_user'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'super_admin_user'@'localhost';
