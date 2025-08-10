@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'ckeditor',
     # 'django.contrib.sites',  # Required
     # 'allauth',
     # 'allauth.account',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'accounts',
     'students',
     'instructors',
+    'enrolments',
 ]
 
 MIDDLEWARE = [

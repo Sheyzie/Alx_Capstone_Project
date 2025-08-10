@@ -1,31 +1,30 @@
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
-from django.contrib.auth import get_user_model
-from accounts.serializers import UserSerializer
 
+from .serializers import StudentSerializer
 from .models import Student
 
 
-User = get_user_model()
-
 class StudentRegistrationAPIView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
 
-        # invoke UserSerializer.create(validated_data) implemented in accounts.serializer
-        user = serializer.save()
+        # activate student status
+        student = serializer.save()
+        student.status = 'activated'
+        student.save()
 
         # ensure that role = student
-        if hasattr(user, 'profile'):
-            user.profile.role = 'student'
-            user.profile.save()
+        if hasattr(student.user, 'profile'):
+            student.user.profile.role = 'student'
+            student.user.profile.save()
 
         # create linked student model
-        Student.objects.create(user=user, status='activated')
+        # Student.objects.create(user=user, status='activated')
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
