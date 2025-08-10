@@ -55,7 +55,6 @@ class CustomUser(AbstractUser):
 
 class UserProfile(models.Model):
     ROLE_CHOICES = [
-        ('admin', 'Admin'),
         ('instructor', 'Instructor'),
         ('student', 'Student')
     ]

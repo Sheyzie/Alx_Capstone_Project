@@ -4,12 +4,12 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from accounts.serializers import UserSerializer
 
-from .models import Student
+from .models import Instructor
 
 
 User = get_user_model()
 
-class StudentRegistrationAPIView(generics.CreateAPIView):
+class InstructorRegistrationAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -20,12 +20,12 @@ class StudentRegistrationAPIView(generics.CreateAPIView):
         # invoke UserSerializer.create(validated_data) implemented in accounts.serializer
         user = serializer.save()
 
-        # ensure that role = student
+        # ensure that role = instructor
         if hasattr(user, 'profile'):
-            user.profile.role = 'student'
+            user.profile.role = 'instructor'
             user.profile.save()
 
-        # create linked student model
-        Student.objects.create(user=user, status='activated')
+        # create linked instructor model
+        Instructor.objects.create(user=user, status='deactivated')
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
