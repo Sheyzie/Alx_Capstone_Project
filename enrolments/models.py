@@ -3,7 +3,8 @@ from instructors.models import Instructor
 from students.models import Student
 
 # to support html tags
-from ckeditor.fields import RichTextField
+# from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 
 # to allow specific html tags
 import bleach
@@ -30,7 +31,7 @@ class Course(models.Model):
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lesson')
     title = models.CharField(max_length=255)
-    content = RichTextField() 
+    content = CKEditor5Field('Text', config_name='extends') 
     order = models.PositiveSmallIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

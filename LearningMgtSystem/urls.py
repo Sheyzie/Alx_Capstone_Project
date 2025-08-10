@@ -21,6 +21,9 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 BASE_URL = 'api'
 
@@ -32,3 +35,7 @@ urlpatterns = [
     path(f'{BASE_URL}/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path(f'{BASE_URL}/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
+
+urlpatterns += [
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
