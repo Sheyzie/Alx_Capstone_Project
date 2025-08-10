@@ -1,6 +1,9 @@
 from rest_framework import serializers
-from .models import CustomUser, UserProfile
+from django.contrib.auth import get_user_model
+from .models import UserProfile
 
+
+User = get_user_model()
 
 # serializer for user profile
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -17,11 +20,13 @@ class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer()
 
     class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'email', 'password', 'profile']
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'password', 'profile']
 
         # set password as write only
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
     def create(self, validated_data):
         # extract profile data and password from validated

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-
+from django.conf import settings
 
 # creating custom user manager
 class CustomUserManager(BaseUserManager):
@@ -59,7 +59,7 @@ class UserProfile(models.Model):
         ('student', 'Student')
     ]
 
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
