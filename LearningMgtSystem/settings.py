@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'ckeditor',
+    'rest_framework.authtoken',
     # 'django.contrib.sites',  # Required
     # 'allauth',
     # 'allauth.account',
@@ -152,6 +153,13 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Setting the authentication scheme for DRF
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
 
 '''
 django.contrib.sites framework that allows you to manage multiple websites from the same Django project. Each “site” is represented by a record in the django_site database table, which includes:
