@@ -25,6 +25,7 @@ class Course(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     instructor = models.OneToOneField(Instructor, on_delete=models.CASCADE)
+    student = models.ManyToManyField(Student, through='Enrolment', related_name='course')
     status = models.CharField(max_length=10, choices=STATUS_CHOICE)
 
 
@@ -60,4 +61,7 @@ class Enrolment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrolment')
     completed = models.PositiveSmallIntegerField(default=0)
     date_joined = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('student', 'course')  # prevent duplicate enrollments
 

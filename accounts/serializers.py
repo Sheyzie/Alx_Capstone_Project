@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password')
 
         # creating user instance
-        user = CustomUser.objects.create(**validated_data)
+        user = User.objects.create(**validated_data)
         user.set_password(password)
         user.save()
 

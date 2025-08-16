@@ -1,5 +1,7 @@
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from .serializers import StudentSerializer
@@ -28,3 +30,11 @@ class StudentRegistrationAPIView(generics.CreateAPIView):
         # Student.objects.create(user=user, status='activated')
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class StatusUpdateView(generics.UpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    lookup_field = 'pk'
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
