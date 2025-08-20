@@ -11,4 +11,4 @@ class Instructor(models.Model):
     status = models.CharField(max_length=12, choices=STATUS_CHOICE)
 
     def __str__(self):
-        return f'{self.user.firstname} {self.user.lastname} (Instructor)'
+        return f'{self.user.first_name} {self.user.last_name} (Instructor)'

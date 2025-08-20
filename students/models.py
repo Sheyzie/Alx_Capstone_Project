@@ -11,6 +11,6 @@ class Student(models.Model):
     status = models.CharField(max_length=12, choices=STATUS_CHOICE)
 
     def __str__(self):
-        return f'{self.user.firstname} {self.user.lastname} (Student)'
+        return f'{self.user.first_name} {self.user.last_name} (Student)'
     
 

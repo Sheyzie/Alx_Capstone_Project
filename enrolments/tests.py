@@ -1,11 +1,11 @@
-from django.test import TestCase
 from rest_framework.test import APIClient, APITestCase
-from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.urls import reverse
+from django.utils import timezone
 from instructors.models import Instructor
 from students.models import Student
 
-from .models import Course, Lesson, LessonVideo, Enrolment
+from .models import Course, Lesson, LessonVideo, Enrolment, VideoSession
 
 
 User = get_user_model()
@@ -798,6 +798,247 @@ class EnrolmentTest(APITestCase):
         enrolement = Enrolment.objects.get(student__id=self.student.id, course=self.course.id)
 
         url = reverse('enrolement_delete', kwargs={'pk': enrolement.pk})
+        
+        response2 = self.client.delete(url)    
+ 
+        self.client = APIClient()
+        bad_response = self.client.delete(url)
+
+        self.assertEqual(response1.status_code, 201)
+        self.assertEqual(response2.status_code, 204)
+        self.assertEqual(bad_response.status_code, 401)
+
+class VideoSessionTest(APITestCase):
+    def setUp(self):
+        # creating a super admin user
+        self.superadmin = User.objects.create_superuser(
+            first_name='Sample',
+            last_name='Superuser',
+            email='superuser@mail.com',
+            password='superuser_Password'
+        )
+
+        data = {
+            'email':'superuser@mail.com',
+            'password':'superuser_Password'
+        }
+
+        # login in as super admin
+        response = self.client.post('/api/token/', data=data, content_type='application/json')
+
+        # extract token from response
+        self.admin_token = response.data.pop('access')
+        
+        # creating instructor and student
+        instructor_url = reverse('instructor_register')
+        student_url = reverse('student_register')
+
+        instructor_data = {
+            'user': {
+                'first_name': 'sample',
+                'last_name': 'instructor',
+                'email': 'sample_instructor@mail.com',
+                'password': 'instructor_Password',
+                'profile': {
+                    'bio': 'This is a test',
+                    'avatar': None
+                }
+            },
+        }
+
+        student_data = {
+            'user': {
+                'first_name': 'sample',
+                'last_name': 'student',
+                'email': 'sample_student@mail.com',
+                'password': 'student_Password',
+                'profile': {
+                    'bio': 'This is a test',
+                    'avatar': None
+                }
+            },
+        }
+
+        response = self.client.post(instructor_url, data=instructor_data, content_type='application/json')
+        response = self.client.post(student_url, data=student_data, content_type='application/json')
+
+        self.instructor = Instructor.objects.get(user__email='sample_instructor@mail.com')
+        self.student = Student.objects.get(user__email='sample_student@mail.com')
+
+        # activate instructor
+        self.instructor.status = 'activated'
+        self.instructor.save()
+
+        # set admin token to header
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.admin_token}')
+        
+        # creating course
+        course_url = reverse('course_create')
+        
+        data = {
+            'title': 'Sample Course',
+            'description': 'Description of a sample course',
+            'instructor': self.instructor.id,
+            'status': 'active'
+        }
+
+        response = self.client.post(course_url, data=data, content_type='application/json')
+        self.course = Course.objects.get(title='Sample Course')
+
+        url = reverse('lesson_create')
+        data = {
+            'course': self.course.id,
+            'title': 'Sample Lesson',
+            'content': '<h1>Sample Lesson</h1><p>A sample content</p>',
+            'order': 1
+        }
+
+        response = self.client.post(url, data=data, content_type='application/json')
+
+        # creating lesson
+        self.lesson = Lesson.objects.get(title='Sample Lesson')
+
+        # login as instructor
+        data = {
+            'email': 'sample_instructor@mail.com',
+            'password': 'instructor_Password',
+        }
+
+        response = self.client.post('/api/token/', data=data, content_type='application/json')
+
+        # extract token from response
+        self.instructor_token = response.data.pop('access')
+
+    def test_session_creation(self):
+        # add instructor token to header
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
+        
+        # create session
+        url = reverse('session_create')
+
+        data = {
+            'session_title': 'Sample Session',
+            'scheduled_time': f'{timezone.now()}'
+        }
+
+        response = self.client.post(url, data=data, content_type='application/json')
+        
+        self.client = APIClient()
+        bad_response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(bad_response.status_code, 401)
+
+    def test_session_list(self):
+        # add instructor token to header
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
+        
+        # create session
+        url = reverse('session_create')
+
+        data = {
+            'session_title': 'Sample Session',
+            'scheduled_time': f'{timezone.now()}'
+        }
+
+        response1 = self.client.post(url, data=data, content_type='application/json')
+        
+        url = reverse('session_list')
+        response2 = self.client.get(url)
+
+        self.client = APIClient()
+        bad_response = self.client.get(url)
+
+        self.assertEqual(response1.status_code, 201)
+        self.assertEqual(response2.status_code, 200)
+        self.assertContains(response2, 'Sample Session')
+        self.assertContains(response2, 'https://meet.jit.si/SampleSession')
+        self.assertEqual(bad_response.status_code, 401)
+
+    def test_session_detail(self):
+       # add instructor token to header
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
+        
+        # create session
+        url = reverse('session_create')
+
+        data = {
+            'session_title': 'Sample Session',
+            'scheduled_time': f'{timezone.now()}'
+        }
+
+        response1 = self.client.post(url, data=data, content_type='application/json')
+        
+        session = VideoSession.objects.get(session_title='Sample Session')
+
+        url = reverse('session_detail', args=(session.id,))
+        response2 = self.client.get(url)
+
+        self.client = APIClient()
+        bad_response = self.client.get(url)
+
+        self.assertEqual(response1.status_code, 201)
+        self.assertEqual(response2.status_code, 200)
+        self.assertContains(response2, 'Sample Session')
+        self.assertEqual(bad_response.status_code, 401)
+
+    def test_session_update(self):
+        # add instructor token to header
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
+        
+        # create session
+        url = reverse('session_create')
+
+        data = {
+            'session_title': 'Sample Session',
+            'scheduled_time': f'{timezone.now()}'
+        }
+
+        response1 = self.client.post(url, data=data, content_type='application/json')
+        
+        session = VideoSession.objects.get(session_title='Sample Session')
+
+        url = reverse('session_update', kwargs={'pk': session.pk})
+        
+        data = {
+            'session_title': 'Updated Sample Session',
+            'scheduled_time': f'{timezone.now()}'
+        }
+
+        response2 = self.client.patch(url, data=data, content_type='application/json')
+        
+        self.client = APIClient()
+        bad_response = self.client.put(url, data=data, content_type='application/json')
+
+        self.assertEqual(response1.status_code, 201)
+        self.assertEqual(response2.status_code, 200)
+        self.assertContains(response2, 'Updated Sample Session')
+        self.assertContains(response2, 'https://meet.jit.si/UpdatedSampleSession')
+        self.assertEqual(bad_response.status_code, 401)
+
+    def test_enrolement_delete(self):
+        # add instructor token to header
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
+        
+        # create session
+        url = reverse('session_create')
+
+        data = {
+            'session_title': 'Sample Session',
+            'scheduled_time': f'{timezone.now()}'
+        }
+
+        response1 = self.client.post(url, data=data, content_type='application/json')
+        
+        session = VideoSession.objects.get(session_title='Sample Session')
+
+        url = reverse('session_delete', kwargs={'pk': session.pk})
         
         response2 = self.client.delete(url)    
  

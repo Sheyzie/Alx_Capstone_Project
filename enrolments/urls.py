@@ -31,4 +31,11 @@ urlpatterns = [
     path('enrolments/<int:pk>/', views.EnrolmentRetrieveAPIView.as_view(), name='enrolement_detail'),
     path('enrolments/<int:pk>/edit/', views.EnrolmentUpdateAPIView.as_view(), name='enrolement_update'),
     path('enrolments/<int:pk>/delete/', views.EnrolmentDestroyAPIView.as_view(), name='enrolement_delete'),
+
+        # --- VideoSession Route ---
+    path('sessions/', views.VideoSessionListAPIView.as_view(), name='session_list'),
+    path('sessions/create/', views.VideoSessionCreateAPIView.as_view(), name='session_create'),
+    path('sessions/<int:pk>/', views.VideoSessionRetrieveAPIView.as_view(), name='session_detail'),
+    path('sessions/<int:pk>/edit/', views.VideoSessionUpdateAPIView.as_view(), name='session_update'),
+    path('sessions/<int:pk>/delete/', views.VideoSessionDeleteAPIView.as_view(), name='session_delete'),
 ]

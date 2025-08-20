@@ -3,6 +3,7 @@ from rest_framework.permissions import BasePermission
 class IsInstructorOrAdmin(BasePermission):
     def has_permission(self, request, view):
         user = request.user
+
         if user and not hasattr(user, 'profile'):
             if user.is_authenticated and user.is_staff:
                 return True

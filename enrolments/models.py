@@ -28,7 +28,9 @@ class Course(models.Model):
     student = models.ManyToManyField(Student, through='Enrolment', related_name='course')
     status = models.CharField(max_length=10, choices=STATUS_CHOICE)
 
-
+    def __str__(self):
+        return f'{self.title}'
+    
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lesson')
     title = models.CharField(max_length=255)
@@ -37,6 +39,9 @@ class Lesson(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f'{self.title}'
+    
     # modifying the save method to screen for tags with bleach
     def save(self, *args, **kwargs):
         # sanitize contents before saving
@@ -54,6 +59,9 @@ class LessonVideo(models.Model):
     title = models.CharField(max_length=255, blank=True)
     order = models.PositiveIntegerField(default=1)
 
+    def __str__(self):
+        return f'{self.title}'
+    
 class Enrolment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='enrolment')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrolment')
@@ -70,3 +78,7 @@ class VideoSession(models.Model):
     scheduled_time = models.DateTimeField()
     session_link = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.session_title}'
+    
