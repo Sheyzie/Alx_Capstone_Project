@@ -24,7 +24,7 @@ class Course(models.Model):
 
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    instructor = models.OneToOneField(Instructor, on_delete=models.CASCADE)
+    instructor = models.OneToOneField(Instructor, on_delete=models.CASCADE, related_name='course')
     student = models.ManyToManyField(Student, through='Enrolment', related_name='course')
     status = models.CharField(max_length=10, choices=STATUS_CHOICE)
 
@@ -54,8 +54,6 @@ class LessonVideo(models.Model):
     title = models.CharField(max_length=255, blank=True)
     order = models.PositiveIntegerField(default=1)
 
-
-
 class Enrolment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='enrolment')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrolment')
@@ -65,3 +63,10 @@ class Enrolment(models.Model):
     class Meta:
         unique_together = ('student', 'course')  # prevent duplicate enrollments
 
+class VideoSession(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    instructor = models.OneToOneField(Instructor, on_delete=models.CASCADE)
+    session_title = models.CharField(max_length=255)
+    scheduled_time = models.DateTimeField()
+    session_link = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)

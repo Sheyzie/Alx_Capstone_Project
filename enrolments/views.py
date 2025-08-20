@@ -1,5 +1,6 @@
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework import serializers
 from rest_framework import status
@@ -9,8 +10,9 @@ from instructors.models import Instructor
 from students.models import Student
 from students.permissions import IsStudentOrAdmin
 
-from .serializers import CourseSerializer, LessonSerializer, LessonVideoSerializer, EnrolmentSerializer
-from .models import Course, Lesson, LessonVideo, Enrolment
+from .utils import generate_jitsi_link
+from .serializers import CourseSerializer, LessonSerializer, LessonVideoSerializer, EnrolmentSerializer, VideoSessionSerializer
+from .models import Course, Lesson, LessonVideo, Enrolment, VideoSession
 
 
 # ---- COURSE VIEW ----
@@ -209,3 +211,60 @@ class EnrolmentDestroyAPIView(DestroyAPIView):
 
     queryset = Enrolment.objects.all()
     serializer_class = EnrolmentSerializer
+
+# ---- VideoSession VIEW ----  
+class VideoSessionCreateAPIView(CreateAPIView):
+    queryset = VideoSession.objects.all()
+    serializer_class = VideoSessionSerializer
+    permission_classes = [IsInstructorOrAdmin]
+    authentication_classes = [JWTAuthentication]
+
+    def perform_create(self, serializer):
+        try:
+            instructor = self.request.user.instructor
+            course_id = instructor.course.id
+            session_title = serializer.validated_data.get('session_title')
+            
+            if not session_title:
+                raise serializers.ValidationError("Session title is required to generate the session link.")
+            
+            session_link = generate_jitsi_link(session_title)
+        except AttributeError:
+            raise PermissionDenied("User is not an instructor.")
+        serializer.save(course=course_id, instructor=instructor.id, session_link=session_link)
+
+class VideoSessionListAPIView(ListAPIView):
+    queryset = VideoSession.objects.all().order_by('-created_at')
+    serializer_class = VideoSessionSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+class VideoSessionRetrieveAPIView(RetrieveAPIView):
+    queryset = VideoSession.objects.all()
+    serializer_class = VideoSessionSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    lookup_field = 'slug'  # or 'uuid' or whatever you're using
+
+class VideoSessionUpdateAPIView(UpdateAPIView):
+    queryset = VideoSession.objects.all()
+    serializer_class = VideoSessionSerializer
+    permission_classes = [IsInstructorOrAdmin]
+    authentication_classes = [JWTAuthentication]
+    lookup_field = 'slug'  # or 'uuid' or whatever you're using
+
+    def perform_update(self, serializer):
+        try:
+            instructor = self.request.user.instructor
+            course_id = instructor.course.id
+        except AttributeError:
+            raise PermissionDenied("User is not an instructor.")
+        serializer.save(course=course_id, instructor=instructor.id)
+
+class VideoSessionDeleteAPIView(DestroyAPIView):
+    queryset = VideoSession.objects.all()
+    serializer_class = VideoSessionSerializer
+    permission_classes = [IsInstructorOrAdmin]
+    authentication_classes = [JWTAuthentication]
+    lookup_field = 'slug'  # or 'uuid' or whatever you're using
+

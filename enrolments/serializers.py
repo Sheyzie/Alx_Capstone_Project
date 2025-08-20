@@ -7,7 +7,7 @@ from students.models import Student
 # to escape html tags
 import bleach
 
-from .models import Course, Lesson, LessonVideo, Enrolment
+from .models import Course, Lesson, LessonVideo, Enrolment, VideoSession
 
 
 # a list of tags to be allowed in lesson contents
@@ -155,4 +155,10 @@ class EnrolmentSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
+class VideoSessionSerializer(serializers.ModelSerializer):
+    course = serializers.StringRelatedField(read_only=True)
+    instructor = serializers.StringRelatedField(read_only=True)
+    session_link = serializers.CharField(read_only=True)
+    class Meta:
+        model = VideoSession
+        fields = ['course', 'instructor', 'session_title', 'scheduled_time', 'session_link']

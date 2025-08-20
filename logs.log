@@ -5069,3 +5069,21 @@ File /home/oluwaseyi/Projects/Learning/Tech_School/ALX/2. Back-End Web Developme
 File /home/oluwaseyi/Projects/Learning/Tech_School/ALX/2. Back-End Web Development/Capstone Project/Alx_Capstone_Project/venv/lib/python3.12/site-packages/rest_framework/authtoken/serializers.py first seen with mtime 1753879064.773762
 "GET /api/docs/redoc/ HTTP/1.1" 200 721
 "GET /api/schema/ HTTP/1.1" 200 33083
+(0.460) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.001) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.221) 
+            SELECT
+                table_name,
+                table_type,
+                table_comment
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE()
+            ; args=None; alias=default
+(0.004) SELECT `django_migrations`.`id`, `django_migrations`.`app`, `django_migrations`.`name`, `django_migrations`.`applied` FROM `django_migrations`; args=(); alias=default
