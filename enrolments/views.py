@@ -29,6 +29,15 @@ class CourseListAPIView(ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
+    filterset_fields = ['title']  # fields for exact filtering
+
+    # Optional: specify search fields
+    search_fields = ['title']  # fields to search in
+
+    # Optional: specify ordering fields
+    ordering_fields = ['created_at', 'title']  # fields to order by
+    ordering = ['created_at']  # default ordering
+
 class CourseRetrieveAPIView(RetrieveAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]

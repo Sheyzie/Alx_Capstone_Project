@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&q+5x7)s!rqi81hzw2nhp(icw1*qabvh+fk=r^%)unw0j-4&ce'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,15 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    # 'ckeditor',
     'django_ckeditor_5',
     'rest_framework.authtoken',
-    # 'django.contrib.sites',  # Required
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # # Add providers as needed
-    # 'allauth.socialaccount.providers.google',
+    'django_filters',
+    'drf_spectacular',
 
     # --- APPS ---
     'accounts',
@@ -67,7 +62,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'allauth.account.middleware.AccountMiddleware', 
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -147,7 +141,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -156,46 +154,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Setting the authentication scheme for DRF
 REST_FRAMEWORK = {
+     # Authentication Setup
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
+     # Pagination Setup
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # Customize page size
+    # Search Filter Setup
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
 }
 
-'''
-django.contrib.sites framework that allows you to manage multiple websites from the same Django project. Each “site” is represented by a record in the django_site database table, which includes:
-
-id: the numeric ID of the site (this is what SITE_ID refers to)
-
-domain: the domain name of the site (e.g. example.com)
-
-name: a human-readable name (e.g. My Example Site)
-'''
-# SITE_ID = 1
-
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.ModelBackend',
-#     'allauth.account.auth_backends.AuthenticationBackend',
-# ]
-
-# ACCOUNT_AUTHENTICATION_METHOD = 'email' # user can log by email only
-
-# ACCOUNT_EMAIL_REQUIRED = True # Requires users to enter an email address during signup
-
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory' # Users must verify their email before logging in
-
-# LOGIN_REDIRECT_URL = '/' # Sets the URL users are redirected to after login (or signup)
-
-# # Configure email backend for development (so you can see confirmation emails):
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
+# setup for auto documentation
+REST_FRAMEWORK['DEFAULT_SCHEMA_CLASS'] = 'drf_spectacular.openapi.AutoSchema'
 
 '''
 CKEditor_5 Setup
 '''
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 customColorPalette = [
     {
@@ -296,3 +276,30 @@ CKEDITOR_5_CONFIGS = {
 # Define a constant in settings.py to specify file upload permissions
 CKEDITOR_5_FILE_UPLOAD_PERMISSION = "staff"  # Possible values: "staff", "authenticated", "any"
 
+# Security Settings
+# SECURE_BROWSER_XSS_FILTER = True
+# X_FRAME_OPTIONS = 'DENY'
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# SECURE_SSL_REDIRECT = True  # Only if you're using HTTPS
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+
+# Monitor and Maintain the Application
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
