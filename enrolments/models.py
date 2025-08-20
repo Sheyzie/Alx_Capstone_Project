@@ -65,7 +65,7 @@ class Enrolment(models.Model):
 
 class VideoSession(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    instructor = models.OneToOneField(Instructor, on_delete=models.CASCADE)
+    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
     session_title = models.CharField(max_length=255)
     scheduled_time = models.DateTimeField()
     session_link = models.URLField(blank=True, null=True)

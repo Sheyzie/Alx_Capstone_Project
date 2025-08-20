@@ -5087,3 +5087,241 @@ File /home/oluwaseyi/Projects/Learning/Tech_School/ALX/2. Back-End Web Developme
             WHERE table_schema = DATABASE()
             ; args=None; alias=default
 (0.004) SELECT `django_migrations`.`id`, `django_migrations`.`app`, `django_migrations`.`name`, `django_migrations`.`applied` FROM `django_migrations`; args=(); alias=default
+(3.971) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.050) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(2.654) 
+            SELECT
+                table_name,
+                table_type,
+                table_comment
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE()
+            ; args=None; alias=default
+(0.070) SELECT `django_migrations`.`id`, `django_migrations`.`app`, `django_migrations`.`name`, `django_migrations`.`applied` FROM `django_migrations`; args=(); alias=default
+(0.001) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.000) 
+                SELECT VERSION(),
+                       @@sql_mode,
+                       @@default_storage_engine,
+                       @@sql_auto_is_null,
+                       @@lower_case_table_names,
+                       CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
+            ; args=None; alias=default
+(0.000) SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; args=None; alias=default
+(0.006) 
+            SELECT
+                table_name,
+                table_type,
+                table_comment
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE()
+            ; args=None; alias=default
+(0.002) SELECT `django_migrations`.`id`, `django_migrations`.`app`, `django_migrations`.`name`, `django_migrations`.`applied` FROM `django_migrations`; args=(); alias=default
+(0.004) 
+            SELECT
+                table_name,
+                table_type,
+                table_comment
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE()
+            ; args=None; alias=default
+(0.001) SELECT `django_migrations`.`id`, `django_migrations`.`app`, `django_migrations`.`name`, `django_migrations`.`applied` FROM `django_migrations`; args=(); alias=default
+(0.004) 
+            SELECT
+                table_name,
+                table_type,
+                table_comment
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE()
+            ; args=None; alias=default
+CREATE TABLE `enrolments_videosession` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `session_title` varchar(255) NOT NULL, `scheduled_time` datetime(6) NOT NULL, `session_link` varchar(200) NULL, `created_at` datetime(6) NOT NULL, `course_id` bigint NOT NULL, `instructor_id` bigint NOT NULL UNIQUE); (params None)
+(8.223) CREATE TABLE `enrolments_videosession` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `session_title` varchar(255) NOT NULL, `scheduled_time` datetime(6) NOT NULL, `session_link` varchar(200) NULL, `created_at` datetime(6) NOT NULL, `course_id` bigint NOT NULL, `instructor_id` bigint NOT NULL UNIQUE); args=None; alias=default
+(0.002) 
+            SELECT engine
+            FROM information_schema.tables
+            WHERE
+                table_name = 'enrolments_videosession' AND
+                table_schema = DATABASE()
+            ; args=['enrolments_videosession']; alias=default
+ALTER TABLE `enrolments_videosession` ADD CONSTRAINT `enrolments_videosess_course_id_6b1473d0_fk_enrolment` FOREIGN KEY (`course_id`) REFERENCES `enrolments_course` (`id`); (params None)
+(3.470) ALTER TABLE `enrolments_videosession` ADD CONSTRAINT `enrolments_videosess_course_id_6b1473d0_fk_enrolment` FOREIGN KEY (`course_id`) REFERENCES `enrolments_course` (`id`); args=None; alias=default
+ALTER TABLE `enrolments_videosession` ADD CONSTRAINT `enrolments_videosess_instructor_id_6466c822_fk_instructo` FOREIGN KEY (`instructor_id`) REFERENCES `instructors_instructor` (`id`); (params None)
+(2.682) ALTER TABLE `enrolments_videosession` ADD CONSTRAINT `enrolments_videosess_instructor_id_6466c822_fk_instructo` FOREIGN KEY (`instructor_id`) REFERENCES `instructors_instructor` (`id`); args=None; alias=default
+(0.704) INSERT INTO `django_migrations` (`app`, `name`, `applied`) VALUES ('enrolments', '0004_alter_course_instructor_videosession', '2025-08-20 14:39:51.354552'); args=['enrolments', '0004_alter_course_instructor_videosession', '2025-08-20 14:39:51.354552']; alias=default
+(0.256) 
+            SELECT kc.`constraint_name`, kc.`column_name`,
+                kc.`referenced_table_name`, kc.`referenced_column_name`,
+                c.`constraint_type`
+            FROM
+                information_schema.key_column_usage AS kc,
+                information_schema.table_constraints AS c
+            WHERE
+                kc.table_schema = DATABASE() AND
+                (
+                    kc.referenced_table_schema = DATABASE() OR
+                    kc.referenced_table_schema IS NULL
+                ) AND
+                c.table_schema = kc.table_schema AND
+                c.constraint_name = kc.constraint_name AND
+                c.constraint_type != 'CHECK' AND
+                kc.table_name = 'enrolments_videosession'
+            ORDER BY kc.`ordinal_position`
+        ; args=['enrolments_videosession']; alias=default
+(0.003) 
+            SELECT  table_collation
+            FROM    information_schema.tables
+            WHERE   table_schema = DATABASE()
+            AND     table_name = 'enrolments_videosession'
+            ; args=['enrolments_videosession']; alias=default
+(0.194) 
+            SELECT
+                column_name, data_type, character_maximum_length,
+                numeric_precision, numeric_scale, extra, column_default,
+                CASE
+                    WHEN collation_name = 'utf8mb4_0900_ai_ci' THEN NULL
+                    ELSE collation_name
+                END AS collation_name,
+                CASE
+                    WHEN column_type LIKE '% unsigned' THEN 1
+                    ELSE 0
+                END AS is_unsigned,
+                column_comment
+            FROM information_schema.columns
+            WHERE table_name = 'enrolments_videosession' AND table_schema = DATABASE()
+            ; args=['utf8mb4_0900_ai_ci', 'enrolments_videosession']; alias=default
+(0.052) SELECT * FROM `enrolments_videosession` LIMIT 1; args=None; alias=default
+(0.006) 
+                    SELECT cc.constraint_name, cc.check_clause
+                    FROM
+                        information_schema.check_constraints AS cc,
+                        information_schema.table_constraints AS tc
+                    WHERE
+                        cc.constraint_schema = DATABASE() AND
+                        tc.table_schema = cc.constraint_schema AND
+                        cc.constraint_name = tc.constraint_name AND
+                        tc.constraint_type = 'CHECK' AND
+                        tc.table_name = 'enrolments_videosession'
+                ; args=['enrolments_videosession']; alias=default
+(0.400) SHOW INDEX FROM `enrolments_videosession`; args=None; alias=default
+ALTER TABLE `enrolments_videosession` DROP FOREIGN KEY `enrolments_videosess_instructor_id_6466c822_fk_instructo`; (params ())
+(0.247) ALTER TABLE `enrolments_videosession` DROP FOREIGN KEY `enrolments_videosess_instructor_id_6466c822_fk_instructo`; args=(); alias=default
+(0.013) 
+            SELECT kc.`constraint_name`, kc.`column_name`,
+                kc.`referenced_table_name`, kc.`referenced_column_name`,
+                c.`constraint_type`
+            FROM
+                information_schema.key_column_usage AS kc,
+                information_schema.table_constraints AS c
+            WHERE
+                kc.table_schema = DATABASE() AND
+                (
+                    kc.referenced_table_schema = DATABASE() OR
+                    kc.referenced_table_schema IS NULL
+                ) AND
+                c.table_schema = kc.table_schema AND
+                c.constraint_name = kc.constraint_name AND
+                c.constraint_type != 'CHECK' AND
+                kc.table_name = 'enrolments_videosession'
+            ORDER BY kc.`ordinal_position`
+        ; args=['enrolments_videosession']; alias=default
+(0.003) 
+            SELECT  table_collation
+            FROM    information_schema.tables
+            WHERE   table_schema = DATABASE()
+            AND     table_name = 'enrolments_videosession'
+            ; args=['enrolments_videosession']; alias=default
+(0.004) 
+            SELECT
+                column_name, data_type, character_maximum_length,
+                numeric_precision, numeric_scale, extra, column_default,
+                CASE
+                    WHEN collation_name = 'utf8mb4_0900_ai_ci' THEN NULL
+                    ELSE collation_name
+                END AS collation_name,
+                CASE
+                    WHEN column_type LIKE '% unsigned' THEN 1
+                    ELSE 0
+                END AS is_unsigned,
+                column_comment
+            FROM information_schema.columns
+            WHERE table_name = 'enrolments_videosession' AND table_schema = DATABASE()
+            ; args=['utf8mb4_0900_ai_ci', 'enrolments_videosession']; alias=default
+(0.001) SELECT * FROM `enrolments_videosession` LIMIT 1; args=None; alias=default
+(0.004) 
+                    SELECT cc.constraint_name, cc.check_clause
+                    FROM
+                        information_schema.check_constraints AS cc,
+                        information_schema.table_constraints AS tc
+                    WHERE
+                        cc.constraint_schema = DATABASE() AND
+                        tc.table_schema = cc.constraint_schema AND
+                        cc.constraint_name = tc.constraint_name AND
+                        tc.constraint_type = 'CHECK' AND
+                        tc.table_name = 'enrolments_videosession'
+                ; args=['enrolments_videosession']; alias=default
+(0.056) SHOW INDEX FROM `enrolments_videosession`; args=None; alias=default
+ALTER TABLE `enrolments_videosession` DROP INDEX `instructor_id`; (params ())
+(0.436) ALTER TABLE `enrolments_videosession` DROP INDEX `instructor_id`; args=(); alias=default
+CREATE INDEX `enrolments_videosession_instructor_id_6466c822` ON `enrolments_videosession` (`instructor_id`); (params ())
+(0.879) CREATE INDEX `enrolments_videosession_instructor_id_6466c822` ON `enrolments_videosession` (`instructor_id`); args=(); alias=default
+ALTER TABLE `enrolments_videosession` ADD CONSTRAINT `enrolments_videosess_instructor_id_6466c822_fk_instructo` FOREIGN KEY (`instructor_id`) REFERENCES `instructors_instructor` (`id`); (params ())
+(6.958) ALTER TABLE `enrolments_videosession` ADD CONSTRAINT `enrolments_videosess_instructor_id_6466c822_fk_instructo` FOREIGN KEY (`instructor_id`) REFERENCES `instructors_instructor` (`id`); args=(); alias=default
+(0.593) INSERT INTO `django_migrations` (`app`, `name`, `applied`) VALUES ('enrolments', '0005_alter_videosession_instructor', '2025-08-20 14:40:01.637469'); args=['enrolments', '0005_alter_videosession_instructor', '2025-08-20 14:40:01.637469']; alias=default
+(0.001) SELECT `django_migrations`.`id`, `django_migrations`.`app`, `django_migrations`.`name`, `django_migrations`.`applied` FROM `django_migrations`; args=(); alias=default
+(0.390) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'admin'; args=('admin',); alias=default
+(0.162) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`app_label` = 'admin' AND `django_content_type`.`model` IN ('logentry')); args=('admin', 'logentry'); alias=default
+(0.294) SELECT `auth_permission`.`content_type_id` AS `content_type`, `auth_permission`.`codename` AS `codename` FROM `auth_permission` INNER JOIN `django_content_type` ON (`auth_permission`.`content_type_id` = `django_content_type`.`id`) WHERE `auth_permission`.`content_type_id` IN (1) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, 2 ASC; args=(1,); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'admin'; args=('admin',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'auth'; args=('auth',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`app_label` = 'auth' AND `django_content_type`.`model` IN ('group', 'permission')); args=('auth', 'group', 'permission'); alias=default
+(0.002) SELECT `auth_permission`.`content_type_id` AS `content_type`, `auth_permission`.`codename` AS `codename` FROM `auth_permission` INNER JOIN `django_content_type` ON (`auth_permission`.`content_type_id` = `django_content_type`.`id`) WHERE `auth_permission`.`content_type_id` IN (2, 3) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, 2 ASC; args=(2, 3); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'auth'; args=('auth',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'contenttypes'; args=('contenttypes',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`app_label` = 'contenttypes' AND `django_content_type`.`model` IN ('contenttype')); args=('contenttypes', 'contenttype'); alias=default
+(0.001) SELECT `auth_permission`.`content_type_id` AS `content_type`, `auth_permission`.`codename` AS `codename` FROM `auth_permission` INNER JOIN `django_content_type` ON (`auth_permission`.`content_type_id` = `django_content_type`.`id`) WHERE `auth_permission`.`content_type_id` IN (4) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, 2 ASC; args=(4,); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'contenttypes'; args=('contenttypes',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sessions'; args=('sessions',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`app_label` = 'sessions' AND `django_content_type`.`model` IN ('session')); args=('sessions', 'session'); alias=default
+(0.001) SELECT `auth_permission`.`content_type_id` AS `content_type`, `auth_permission`.`codename` AS `codename` FROM `auth_permission` INNER JOIN `django_content_type` ON (`auth_permission`.`content_type_id` = `django_content_type`.`id`) WHERE `auth_permission`.`content_type_id` IN (5) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, 2 ASC; args=(5,); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sessions'; args=('sessions',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'authtoken'; args=('authtoken',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`app_label` = 'authtoken' AND `django_content_type`.`model` IN ('token', 'tokenproxy')); args=('authtoken', 'token', 'tokenproxy'); alias=default
+(0.002) SELECT `auth_permission`.`content_type_id` AS `content_type`, `auth_permission`.`codename` AS `codename` FROM `auth_permission` INNER JOIN `django_content_type` ON (`auth_permission`.`content_type_id` = `django_content_type`.`id`) WHERE `auth_permission`.`content_type_id` IN (6, 7) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, 2 ASC; args=(6, 7); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'authtoken'; args=('authtoken',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'accounts'; args=('accounts',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`app_label` = 'accounts' AND `django_content_type`.`model` IN ('userprofile', 'customuser')); args=('accounts', 'userprofile', 'customuser'); alias=default
+(0.002) SELECT `auth_permission`.`content_type_id` AS `content_type`, `auth_permission`.`codename` AS `codename` FROM `auth_permission` INNER JOIN `django_content_type` ON (`auth_permission`.`content_type_id` = `django_content_type`.`id`) WHERE `auth_permission`.`content_type_id` IN (8, 9) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, 2 ASC; args=(8, 9); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'accounts'; args=('accounts',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'students'; args=('students',); alias=default
+(0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`app_label` = 'students' AND `django_content_type`.`model` IN ('student')); args=('students', 'student'); alias=default
+(0.002) SELECT `auth_permission`.`content_type_id` AS `content_type`, `auth_permission`.`codename` AS `codename` FROM `auth_permission` INNER JOIN `django_content_type` ON (`auth_permission`.`content_type_id` = `django_content_type`.`id`) WHERE `auth_permission`.`content_type_id` IN (10) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, 2 ASC; args=(10,); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'students'; args=('students',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'instructors'; args=('instructors',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`app_label` = 'instructors' AND `django_content_type`.`model` IN ('instructor')); args=('instructors', 'instructor'); alias=default
+(0.001) SELECT `auth_permission`.`content_type_id` AS `content_type`, `auth_permission`.`codename` AS `codename` FROM `auth_permission` INNER JOIN `django_content_type` ON (`auth_permission`.`content_type_id` = `django_content_type`.`id`) WHERE `auth_permission`.`content_type_id` IN (11) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, 2 ASC; args=(11,); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'instructors'; args=('instructors',); alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'enrolments'; args=('enrolments',); alias=default
+(0.000) BEGIN; args=None; alias=default
+(0.001) INSERT INTO `django_content_type` (`app_label`, `model`) VALUES ('enrolments', 'videosession'); args=('enrolments', 'videosession'); alias=default
+(0.460) COMMIT; args=None; alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`app_label` = 'enrolments' AND `django_content_type`.`model` IN ('videosession', 'lessonvideo', 'enrolment', 'lesson', 'course')); args=('enrolments', 'videosession', 'lessonvideo', 'enrolment', 'lesson', 'course'); alias=default
+(0.002) SELECT `auth_permission`.`content_type_id` AS `content_type`, `auth_permission`.`codename` AS `codename` FROM `auth_permission` INNER JOIN `django_content_type` ON (`auth_permission`.`content_type_id` = `django_content_type`.`id`) WHERE `auth_permission`.`content_type_id` IN (12, 13, 14, 15, 16) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, 2 ASC; args=(12, 13, 14, 15, 16); alias=default
+(0.001) BEGIN; args=None; alias=default
+(0.051) INSERT INTO `auth_permission` (`name`, `content_type_id`, `codename`) VALUES ('Can add video session', 16, 'add_videosession'), ('Can change video session', 16, 'change_videosession'), ('Can delete video session', 16, 'delete_videosession'), ('Can view video session', 16, 'view_videosession'); args=('Can add video session', 16, 'add_videosession', 'Can change video session', 16, 'change_videosession', 'Can delete video session', 16, 'delete_videosession', 'Can view video session', 16, 'view_videosession'); alias=default
+(0.311) COMMIT; args=None; alias=default
+(0.001) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'enrolments'; args=('enrolments',); alias=default
