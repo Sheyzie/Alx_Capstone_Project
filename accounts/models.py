@@ -35,7 +35,7 @@ class CustomUserManager(BaseUserManager):
 
         user.is_staff = True
         user.is_active = True
-        user.is_superuser - True
+        user.is_superuser = True
         user.save(using=self._db)
 
         return user
@@ -43,7 +43,7 @@ class CustomUserManager(BaseUserManager):
 # creating custom user
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, max_length=255)
-    username = models.CharField(unique=False, max_length=100, blank=True, null=True)
+    username = models.CharField(unique=False, max_length=100, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']

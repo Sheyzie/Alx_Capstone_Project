@@ -248,8 +248,14 @@ class LessonTest(APITestCase):
         self.instructor = Instructor.objects.get(user__email='sample_instructor@mail.com')
         self.student = Student.objects.get(user__email='sample_student@mail.com')
 
+        # activate instructor
+        self.instructor.status = 'activated'
+        self.instructor.save()
+
+        # add amin token to header
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
+        
         course_url = reverse('course_create')
         data = {
             'title': 'Sample Course',
@@ -260,6 +266,21 @@ class LessonTest(APITestCase):
 
         response = self.client.post(course_url, data=data, content_type='application/json')
         self.course = Course.objects.get(title='Sample Course')
+
+        # login as instructor
+        data = {
+            'email': 'sample_instructor@mail.com',
+            'password': 'instructor_Password',
+        }
+
+        response = self.client.post('/api/token/', data=data, content_type='application/json')
+
+        # extract token from response
+        self.instructor_token = response.data.pop('access')
+
+        # add instructor token to header
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
 
     def test_lesson_creation(self):
         
@@ -434,8 +455,14 @@ class LessonVideoTest(APITestCase):
         self.instructor = Instructor.objects.get(user__email='sample_instructor@mail.com')
         self.student = Student.objects.get(user__email='sample_student@mail.com')
 
+        # activate instructor
+        self.instructor.status = 'activated'
+        self.instructor.save()
+
+        # add admin token to header
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
+        
         course_url = reverse('course_create')
         data = {
             'title': 'Sample Course',
@@ -446,6 +473,22 @@ class LessonVideoTest(APITestCase):
 
         response = self.client.post(course_url, data=data, content_type='application/json')
         self.course = Course.objects.get(title='Sample Course')
+
+        # login as instructor
+        data = {
+            'email': 'sample_instructor@mail.com',
+            'password': 'instructor_Password',
+        }
+
+        response = self.client.post('/api/token/', data=data, content_type='application/json')
+
+        # extract token from response
+        self.instructor_token = response.data.pop('access')
+
+        # add instructor token to header
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
+
 
         url = reverse('lesson_create')
         data = {
@@ -636,6 +679,10 @@ class EnrolmentTest(APITestCase):
         self.instructor = Instructor.objects.get(user__email='sample_instructor@mail.com')
         self.student = Student.objects.get(user__email='sample_student@mail.com')
 
+        # activate instructor
+        self.instructor.status = 'activated'
+        self.instructor.save()
+
         # set admin token to header
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.admin_token}')
@@ -652,6 +699,21 @@ class EnrolmentTest(APITestCase):
 
         response = self.client.post(course_url, data=data, content_type='application/json')
         self.course = Course.objects.get(title='Sample Course')
+
+        # login as instructor
+        data = {
+            'email': 'sample_instructor@mail.com',
+            'password': 'instructor_Password',
+        }
+
+        response = self.client.post('/api/token/', data=data, content_type='application/json')
+
+        # extract token from response
+        self.instructor_token = response.data.pop('access')
+
+        # add instructor token to header
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
 
         url = reverse('lesson_create')
         data = {
@@ -886,19 +948,6 @@ class VideoSessionTest(APITestCase):
         response = self.client.post(course_url, data=data, content_type='application/json')
         self.course = Course.objects.get(title='Sample Course')
 
-        url = reverse('lesson_create')
-        data = {
-            'course': self.course.id,
-            'title': 'Sample Lesson',
-            'content': '<h1>Sample Lesson</h1><p>A sample content</p>',
-            'order': 1
-        }
-
-        response = self.client.post(url, data=data, content_type='application/json')
-
-        # creating lesson
-        self.lesson = Lesson.objects.get(title='Sample Lesson')
-
         # login as instructor
         data = {
             'email': 'sample_instructor@mail.com',
@@ -910,11 +959,24 @@ class VideoSessionTest(APITestCase):
         # extract token from response
         self.instructor_token = response.data.pop('access')
 
-    def test_session_creation(self):
         # add instructor token to header
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
-        
+
+        url = reverse('lesson_create')
+        data = {
+            # 'course': self.course.id,
+            'title': 'Sample Lesson',
+            'content': '<h1>Sample Lesson</h1><p>A sample content</p>',
+            'order': 1
+        }
+
+        response = self.client.post(url, data=data, content_type='application/json')
+
+        # creating lesson
+        self.lesson = Lesson.objects.get(title='Sample Lesson')
+
+    def test_session_creation(self):     
         # create session
         url = reverse('session_create')
 
@@ -932,10 +994,6 @@ class VideoSessionTest(APITestCase):
         self.assertEqual(bad_response.status_code, 401)
 
     def test_session_list(self):
-        # add instructor token to header
-        self.client = APIClient()
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
-        
         # create session
         url = reverse('session_create')
 
@@ -958,11 +1016,7 @@ class VideoSessionTest(APITestCase):
         self.assertContains(response2, 'https://meet.jit.si/SampleSession')
         self.assertEqual(bad_response.status_code, 401)
 
-    def test_session_detail(self):
-       # add instructor token to header
-        self.client = APIClient()
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
-        
+    def test_session_detail(self):    
         # create session
         url = reverse('session_create')
 
@@ -986,11 +1040,7 @@ class VideoSessionTest(APITestCase):
         self.assertContains(response2, 'Sample Session')
         self.assertEqual(bad_response.status_code, 401)
 
-    def test_session_update(self):
-        # add instructor token to header
-        self.client = APIClient()
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
-        
+    def test_session_update(self):     
         # create session
         url = reverse('session_create')
 
@@ -1021,11 +1071,7 @@ class VideoSessionTest(APITestCase):
         self.assertContains(response2, 'https://meet.jit.si/UpdatedSampleSession')
         self.assertEqual(bad_response.status_code, 401)
 
-    def test_enrolement_delete(self):
-        # add instructor token to header
-        self.client = APIClient()
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.instructor_token}')
-        
+    def test_enrolement_delete(self):    
         # create session
         url = reverse('session_create')
 

@@ -56,3 +56,14 @@ class UserTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    # # DEBUG - TEST
+    # def test_created_superuser(self):
+    #     u = User.objects.create_superuser(
+    #         first_name='super',
+    #         last_name='user',
+    #         email='superuser@mail.com',
+    #         password='super_User'
+    #     )
+
+    #     print(u.is_superuser, u.is_staff, u.is_active)
+

@@ -89,7 +89,7 @@ def deactivate_student(request, pk):
     if student.status == 'deactivated':
         return Response({'detail': 'Student is already deactivated.'}, status=200)
     
-    student.status = 'activated'
+    student.status = 'deactivated'
     student.save()
 
     return Response({'detail': 'Student has been deactivated.'}, status=200)

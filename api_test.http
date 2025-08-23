@@ -1,0 +1,320 @@
+
+GET http://api.example.com/data
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+
+###
+
+POST http://127.0.0.1:8000/api/register/
+Content-Type: application/json
+
+{
+    "first_name": "sample",
+    "last_name": "user",
+    "email": "sample_user@mail.com",
+    "password": "sample_user_Password"
+}
+
+###
+
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+    "email": "sample_instructor@mail.com",
+    "password": "sample_instructor_Password"
+}
+
+###
+
+POST http://127.0.0.1:8000/api/instructors/register/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "user": {
+        "first_name": "sample",
+        "last_name": "instructor",
+        "email": "sample_instructor1@mail.com",
+        "password": "sample_instructor_Password",
+        "profile": {
+            "bio": "This is a test",
+            "avatar": null
+        }
+    }
+}
+
+###
+
+GET http://127.0.0.1:8000/api/instructors/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+GET http://127.0.0.1:8000/api/instructors/2
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+PUT http://127.0.0.1:8000/api/instructors/2/activate/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+}
+
+###
+
+PUT http://127.0.0.1:8000/api/instructors/1/deactivate/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+}
+
+###
+
+POST http://127.0.0.1:8000/api/students/register/
+Content-Type: application/json
+
+{
+    "user": {
+        "first_name": "sample",
+        "last_name": "user",
+        "email": "sample_user@mail.com",
+        "password": "sample_user_Password",
+        "profile": {
+            "bio": "This is a test",
+            "avatar": null
+        }
+    }
+}
+
+###
+
+GET http://127.0.0.1:8000/api/students/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+GET http://127.0.0.1:8000/api/students/1/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+PUT http://127.0.0.1:8000/api/students/2/activate/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+}
+
+###
+
+PUT http://127.0.0.1:8000/api/students/1/deactivate/
+Authorization: YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+}
+
+###
+
+POST http://127.0.0.1:8000/api/courses/create/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "title": "Sample Course",
+    "description": "Description of a sample course",
+    "instructor": 1,
+    "status": "inactive"
+}
+
+###
+
+GET http://127.0.0.1:8000/api/courses/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+GET http://127.0.0.1:8000/api/courses/1/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+PUT http://127.0.0.1:8000/api/courses/1/edit/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "title": "Sample Course",
+    "description": "Description of a sample course",
+    "instructor": 1,
+    "status": "inactive"
+}
+
+###
+
+DELETE  http://127.0.0.1:8000/api/courses/1/delete/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+POST http://127.0.0.1:8000/api/lessons/create/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "course": 1,
+    "title": "Sample Lesson",
+    "content": "<h1>Sample Lesson</h1><p>A sample content</p>",
+    "order": 1
+}
+
+###
+
+GET http://127.0.0.1:8000/api/lessons/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+GET http://127.0.0.1:8000/api/lessons/1/
+Authorization: Bearer YOUR_AUTH_TOKEN
+###
+
+PUT http://127.0.0.1:8000/api/lessons/1/edit/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "course": 1,
+    "title": "Updated Sample Lesson",
+    "content": "<h1>Sample Lesson</h1><p>A sample content</p>",
+    "order": 1
+}
+
+###
+
+DELETE  http://127.0.0.1:8000/api/lessons/1/delete/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+POST http://127.0.0.1:8000/api/lesson-videos/create/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "lesson": 1,
+    "title": "Sample Lesson",
+    "url": "https://lessonurl.com",
+    "order": 1
+}
+
+###
+
+GET http://127.0.0.1:8000/api/lesson-videos/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+GET http://127.0.0.1:8000/api/lesson-videos/1/
+Authorization: Bearer YOUR_AUTH_TOKEN
+###
+
+PUT http://127.0.0.1:8000/api/lesson-videos/1/edit/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "lesson": 1,
+    "title": "Updated Sample Lesson",
+    "url": "https://lessonurl.com",
+    "order": 2
+}
+
+###
+
+DELETE  http://127.0.0.1:8000/api/lesson-videos/1/delete/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+POST http://127.0.0.1:8000/api/sessions/create/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "session_title": "Sample Lesson",
+    "scheduled_time": "2025-08-23 12:00:00"
+}
+
+###
+
+GET http://127.0.0.1:8000/api/sessions/
+Authorization: YOUR_AUTH_TOKEN
+
+###
+
+GET http://127.0.0.1:8000/api/sessions/1/
+Authorization: Bearer YOUR_AUTH_TOKEN
+###
+
+PUT http://127.0.0.1:8000/api/sessions/1/edit/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "session_title": "Updated Sample Lesson",
+    "scheduled_time": "2025-08-23 12:00:00"
+}
+
+###
+
+DELETE  http://127.0.0.1:8000/api/sessions/1/delete/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+POST http://127.0.0.1:8000/api/enrolments/create/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json
+
+{
+    "course": 1
+}
+
+###
+
+GET http://127.0.0.1:8000/api/enrolments/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+###
+
+GET http://127.0.0.1:8000/api/enrolments/1/
+Authorization: Bearer YOUR_AUTH_TOKEN
+###
+
+PUT http://127.0.0.1:8000/api/enrolments/1/edit/
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+{
+    "course": 1
+}
+
+
+###
+
+DELETE  http://127.0.0.1:8000/api/enrolments/1/delete/
+Authorization: Bearer YOUR_AUTH_TOKEN
+Content-Type: application/json

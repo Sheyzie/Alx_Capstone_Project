@@ -37,17 +37,6 @@ class CourseSerializer(serializers.ModelSerializer):
 
         return attrs
     
-    # def create(self, validated_data):
-    #     # setting the status for course
-    #     validated_data['status'] = 'inactive'
-
-    #     # create course instance
-    #     course = Course.objects.create(**validated_data)
-    # #     course.instructor = instructor
-    # #     course.save()
-       
-    #     return course
-    
     # Make instructor optional on update
     def update(self, instance, validated_data):
         # Remove instructor if not provided in update payload
@@ -56,7 +45,7 @@ class CourseSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class LessonSerializer(serializers.ModelSerializer):
-    course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all(), required=False)
+    course = serializers.PrimaryKeyRelatedField(read_only=True)
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
 
@@ -83,11 +72,16 @@ class LessonSerializer(serializers.ModelSerializer):
         return attrs
     
     # Make course optional on update
-    def update(self, instance, validated_data):
-        # Remove course if not provided in update payload
-        if 'course' not in validated_data:
-            validated_data.pop('course', None)
-        return super().update(instance, validated_data)
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user =request.user
+
+        if hasattr(user, 'instructor') and hasattr(user.instructor, 'course'):
+            course = user.instructor.course
+            validated_data['course'] = course
+            lesson = Lesson.objects.create(**validated_data)
+            return lesson
+        raise serializers.ValidationError('Only intructor can create lessons')
 
 class LessonVideoSerializer(serializers.ModelSerializer):
     lesson = serializers.PrimaryKeyRelatedField(queryset=Lesson.objects.all(), required=False)
@@ -106,12 +100,24 @@ class LessonVideoSerializer(serializers.ModelSerializer):
         return attrs
     
     # Make lesson optional on update
-    def update(self, instance, validated_data):
-        # Remove lesson if not provided in update payload
-        if 'lesson' not in validated_data:
-            validated_data.pop('lesson', None)
-        return super().update(instance, validated_data)
-        print(response.data)
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+
+        if hasattr(user, 'instructor') and hasattr(user.instructor, 'course'):
+            course = user.instructor.course
+            lesson = validated_data.pop('lesson')
+
+            # If lesson came as id (int), fetch it
+            if isinstance(lesson, int):
+                lesson = Lesson.objects.get(course=course, pk=lesson)
+
+            # (Optional) safety check: make sure this lesson belongs to instructor’s course
+            if lesson.course != course:
+                raise serializers.ValidationError("This lesson does not belong to your course.")
+
+            lesson_video = LessonVideo.objects.create(lesson=lesson, **validated_data)
+            return lesson_video
 
 class EnrolmentSerializer(serializers.ModelSerializer):
     student = StudentSerializer(read_only=True)
@@ -146,12 +152,10 @@ class EnrolmentSerializer(serializers.ModelSerializer):
 
         return attrs
     
-    # Make lesson optional on update
+    # Make increment completed by 1
     def update(self, instance, validated_data):
 
         instance.completed += 1
-
-
         instance.save()
         return instance
 

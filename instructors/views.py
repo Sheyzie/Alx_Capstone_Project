@@ -88,7 +88,7 @@ def deactivate_instructor(request, pk):
     if instructor.status == 'deactivated':
         return Response({'detail': 'Instructor is already deactivated.'}, status=200)
     
-    instructor.status = 'activated'
+    instructor.status = 'deactivated'
     instructor.save()
 
     return Response({'detail': 'Instructor has been deactivated.'}, status=200)

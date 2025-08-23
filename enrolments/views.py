@@ -3,10 +3,8 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework import serializers
-from rest_framework import status
 from rest_framework.response import Response
 from instructors.permissions import IsInstructorOrAdmin
-from instructors.models import Instructor
 from students.models import Student
 from students.permissions import IsStudentOrAdmin
 
