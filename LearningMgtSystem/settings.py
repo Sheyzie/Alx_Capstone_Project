@@ -26,12 +26,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev‑only‑fallback')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    os.environ.get('PA_HOST', ''), # for pythonanywhere
+    os.environ.get('PROD_HOST', ''),
+]
+
+ALLOWED_HOSTS = [h for h in ALLOWED_HOSTS if h]
+
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{os.environ.get('PA_HOST','')}",
+    f"https://{os.environ.get('PROD_HOST','')}",
+]
+
+CSRF_TRUSTED_ORIGINS = [o for o in CSRF_TRUSTED_ORIGINS if o != 'https://']
 
 
 # Application definition
@@ -48,6 +60,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'drf_spectacular',
+    'corsheaders', # if serving a separate frontend
 
     # --- APPS ---
     'accounts',
@@ -57,6 +70,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', # cors middleware must come first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,6 +79,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    os.environ.get('FRONTEND_ORIGIN', ''), # e.g. https://app.example.com
+    f'http://localhost:{os.getenv('PORT', '3000')}', # dev
+]
+
+CORS_ALLOWED_ORIGINS = [o for o in CORS_ALLOWED_ORIGINS if o]
 
 ROOT_URLCONF = 'LearningMgtSystem.urls'
 
