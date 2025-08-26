@@ -63,9 +63,6 @@ pip install -r requirements.txt
 Create a `.env` file in the root directory:
 
 ```env
-SECRET_KEY=your_secret_key
-DEBUG=True
-DATABASE_URL=mysql://user:password@localhost:3306/your_db_name
 DB_NAME=learning_mgt_sys
 DB_USER=super_admin_user
 DB_PASSWORD=SuperAdminUser1
