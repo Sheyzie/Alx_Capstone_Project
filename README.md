@@ -66,6 +66,24 @@ Create a `.env` file in the root directory:
 SECRET_KEY=your_secret_key
 DEBUG=True
 DATABASE_URL=mysql://user:password@localhost:3306/your_db_name
+DB_NAME=learning_mgt_sys
+DB_USER=super_admin_user
+DB_PASSWORD=SuperAdminUser1
+DB_HOST=localhost
+DB_PORT=3306
+
+DEBUG=True
+DJANGO_SECRET_KEY=your_secret_key
+
+PA_HOST=your_pythonanywhere_host   # Example: yourusername.pythonanywhere.com
+PROD_HOST=your_production_host     # Example: api.yourdomain.com
+FRONTEND_ORIGIN=http://localhost:3000   # Frontend client URL
+
+# Optional: non‑interactive superuser creation
+DJANGO_SUPERUSER_FIRSTNAME=admin
+DJANGO_SUPERUSER_LASTNAME=admin
+DJANGO_SUPERUSER_EMAIL=admin@example.com
+DJANGO_SUPERUSER_PASSWORD=super_admin_pass
 ```
 
 You can use `python-dotenv` to load this file automatically.
