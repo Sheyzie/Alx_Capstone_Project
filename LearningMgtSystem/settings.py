@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-
+from datetime import timedelta
 
 # Load environment variables from .env file
 load_dotenv()
@@ -191,6 +191,14 @@ REST_FRAMEWORK = {
     ],
 }
 
+SIMPLE_JWT = {
+    # setup for token expiration
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
 # setup for auto documentation
 REST_FRAMEWORK['DEFAULT_SCHEMA_CLASS'] = 'drf_spectacular.openapi.AutoSchema'
 
@@ -298,12 +306,12 @@ CKEDITOR_5_CONFIGS = {
 CKEDITOR_5_FILE_UPLOAD_PERMISSION = "staff"  # Possible values: "staff", "authenticated", "any"
 
 # Security Settings
-# SECURE_BROWSER_XSS_FILTER = True
-# X_FRAME_OPTIONS = 'DENY'
-# SECURE_CONTENT_TYPE_NOSNIFF = True
-# SECURE_SSL_REDIRECT = True  # Only if you're using HTTPS
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True  # Only if you're using HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Monitor and Maintain the Application
 LOGGING = {
