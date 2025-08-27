@@ -26,25 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev‑only‑fallback')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev‑only‑fallback')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = [
-    os.environ.get('PA_HOST', ''), # for pythonanywhere
-    os.environ.get('PROD_HOST', ''),
-]
 
-ALLOWED_HOSTS = [h for h in ALLOWED_HOSTS if h]
-
-CSRF_TRUSTED_ORIGINS = [
-    f"https://{os.environ.get('PA_HOST','')}",
-    f"https://{os.environ.get('PROD_HOST','')}",
-]
-
-CSRF_TRUSTED_ORIGINS = [o for o in CSRF_TRUSTED_ORIGINS if o != 'https://']
-
+ALLOWED_HOSTS = [os.getenv("PA_HOST", "sheyzie.pythonanywhere.com")]
+CSRF_TRUSTED_ORIGINS = [f"https://{os.getenv('PA_HOST', 'sheyzie.pythonanywhere.com')}"]
 
 # Application definition
 
@@ -81,7 +70,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    os.environ.get('FRONTEND_ORIGIN', ''), # e.g. https://app.example.com
+    os.getenv('FRONTEND_ORIGIN', ''), # e.g. https://app.example.com
     f'http://localhost:{os.getenv('PORT', '3000')}', # dev
 ]
 
@@ -117,11 +106,11 @@ DATABASES = {
         "USER": os.getenv('DB_USER'),
         "PASSWORD": os.getenv('DB_PASSWORD'),
         "HOST": os.getenv('DB_HOST'),
-        "PORT": os.getenv('DB_PORT'),  
+        "PORT": os.getenv('DB_PORT'),
         'OPTIONS': {
             # Ensures safer, stricter data validation
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        },  
+        },
     }
 }
 
